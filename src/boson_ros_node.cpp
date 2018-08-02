@@ -4,33 +4,18 @@
 
 #include <ros/ros.h>
 #include <iostream>
-#include <stdio.h>
-#include <stdint.h>
+#include <cstdio>
+#include <cstdint>
 #include <opencv2/opencv.hpp>
-#include "boson_camera.h"
+#include "boson_camera/boson.h"
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/CameraInfo.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
-#include <time.h>
+#include <ctime>
+#include <boson_camera/boson.h>
 
-timespec get_reset_time() {
-    /* get monotonic clock time */
-    struct timespec monotime;
-    clock_gettime(CLOCK_MONOTONIC, &monotime);
 
-    /* get realtime clock time for comparison */
-//    struct timespec realtime;
-//    clock_gettime(CLOCK_REALTIME, &realtime);
-
-    ros::Time now = ros::Time::now();
-
-    struct timespec epoch_time;
-    epoch_time.tv_sec = now.sec - monotime.tv_sec;
-    epoch_time.tv_nsec = now.nsec - monotime.tv_nsec;
-
-    return epoch_time;
-}
 
 int main(int argc, char *argv[]) {
     // TODO rewrite node in clean code format
@@ -38,7 +23,7 @@ int main(int argc, char *argv[]) {
     float frame_rate = 10.0;
 
     // Initialize node
-    ros::init(argc, argv, "boson_camera_node");
+    ros::init(argc, argv, "boson_ros_node");
 
     ros::NodeHandle nh("boson");
     ros::NodeHandle nh_private("~");
@@ -46,25 +31,11 @@ int main(int argc, char *argv[]) {
     printf("Video device set to: %s\n", argv[1]);
 
     // Initialize camera
-    BosonCamera camera = BosonCamera(argv[1]);
-    camera.init();
-    camera.allocateBuffer();
-    camera.startStream();
+    boson::BosonCamera *camera = new boson::BosonCamera(nh, nh_private, argv[1]);
 
-    // Get time difference between REALTIME and MONOTIME
-    struct timespec epoch_time = get_reset_time();
+    ros::spin();
+    //return  0;
 
-    // Setup publisher
-    image_transport::ImageTransport it(nh);
-    image_transport::Publisher boson_raw_pub = it.advertise("/boson/image_raw", 1);
-    image_transport::Publisher boson_normalized_pub = it.advertise("/boson/image_normalized", 1);
-
-    // Set publishing frequency
-    if (nh.hasParam("frame_rate")) {
-        nh.getParam("frame_rate", frame_rate);
-    }
-    printf("Streaming with frequency of %.1f Hz\n", frame_rate);
-    int framecount = 0;
 
     ros::Rate loop_rate(frame_rate);
     while (ros::ok()) {
