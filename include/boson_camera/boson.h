@@ -17,8 +17,6 @@ namespace boson {
 
         ~BosonCamera();
 
-        //BosonCamera(std::string device_address);
-        //void dataStop();
         static void onDisconnectUSB(void *);
 
     private:

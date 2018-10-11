@@ -104,7 +104,6 @@ namespace boson {
 
         // Set video format
         format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-//    format.fmt.pix.pixelformat = V4L2_PIX_FMT_YVU420;    // 8-bit
         format.fmt.pix.pixelformat = V4L2_PIX_FMT_Y16;       // 16-bit
         format.fmt.pix.width = 640;
         format.fmt.pix.height = 512;
