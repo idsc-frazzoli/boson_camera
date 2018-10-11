@@ -13,14 +13,13 @@
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <ctime>
-#include <boson_camera/boson.h>
+#include "../include/boson_camera/boson.h"
 
 
 
 int main(int argc, char *argv[]) {
-    // TODO rewrite node in clean code format
     // Default frame rate of 10 Hz
-    float frame_rate = 10.0;
+    float frame_rate = 10.0; //todo handle this via the client_api
 
     // Initialize node
     ros::init(argc, argv, "boson_ros_node");
@@ -40,17 +39,17 @@ int main(int argc, char *argv[]) {
     ros::Rate loop_rate(frame_rate);
     while (ros::ok()) {
         cv::Mat img = camera.captureRawFrame();
-        cv::Mat img_norm;
-        img.copyTo(img_norm);
-
+        //cv::Mat img_norm;
+        //img.copyTo(img_norm);
+//
         // Normalize for visualization
-        cv::normalize(img, img_norm, 65536, 0, cv::NORM_MINMAX);
+        //cv::normalize(img, img_norm, 65536, 0, cv::NORM_MINMAX);
         framecount++;
 
         // Convert to image_msg & publish msg
         sensor_msgs::ImagePtr msg[2];
         msg[0] = cv_bridge::CvImage(std_msgs::Header(), "mono16", img).toImageMsg();
-        msg[1] = cv_bridge::CvImage(std_msgs::Header(), "mono16", img_norm).toImageMsg();
+        //msg[1] = cv_bridge::CvImage(std_msgs::Header(), "mono16", img_norm).toImageMsg();
 
         for (int i = 0; i < 2; i++) {
             msg[i]->width = camera.width;
@@ -66,7 +65,7 @@ int main(int argc, char *argv[]) {
         loop_rate.sleep();
     }
 
-    ros::spinOnce();
+    // ros::spinOnce();
 
     boson_raw_pub.shutdown();
 

@@ -51,17 +51,14 @@ namespace boson {
         height = 512;
         printf("Device set to: %s\n", device.c_str());
 
-        ns = ros::this_node::getNamespace();
-        if (ns == "/")
-            ns = "/boson";
 
         camera_info_pub_ = nh_.advertise<sensor_msgs::CameraInfo>(ns + "/camera_info", 1);
         image_pub_ = nh_.advertise<sensor_msgs::Image>(ns + "/image_raw", 1);
 
 
-        camera.init();
-        camera.allocateBuffer();
-        camera.startStream();
+        this.init();
+        this.allocateBuffer();
+        this.startStream();
 
         // Get time difference between REALTIME and MONOTIME
         struct timespec epoch_time = get_reset_time();
@@ -69,7 +66,7 @@ namespace boson {
         // Setup publisher
         image_transport::ImageTransport it(nh);
         image_transport::Publisher boson_raw_pub = it.advertise("/boson/image_raw", 1);
-        image_transport::Publisher boson_normalized_pub = it.advertise("/boson/image_normalized", 1);
+        //image_transport::Publisher boson_normalized_pub = it.advertise("/boson/image_normalized", 1);
 
         // Set publishing frequency
         if (nh.hasParam("frame_rate")) {
@@ -105,8 +102,8 @@ namespace boson {
         // Set video format
         format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         format.fmt.pix.pixelformat = V4L2_PIX_FMT_Y16;       // 16-bit
-        format.fmt.pix.width = 640;
-        format.fmt.pix.height = 512;
+        format.fmt.pix.width = CAMERA_WIDTH;
+        format.fmt.pix.height = CAMERA_HEIGHT;
 
         // Request desired format
         if (ioctl(fd, VIDIOC_S_FMT, &format) == -1) {
