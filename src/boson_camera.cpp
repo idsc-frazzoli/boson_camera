@@ -47,7 +47,7 @@ BosonCamera::BosonCamera(string device_address) {
     device = device_address;
     width = 640;
     height = 512;
-//    printf("Device set to: %s\n", device.c_str());
+    printf("Device set to: %s\n", device.c_str());
 }
 
 BosonCamera::BosonCamera() {}

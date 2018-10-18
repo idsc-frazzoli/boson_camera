@@ -7,13 +7,48 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <opencv2/opencv.hpp>
-#include "boson_camera.h"
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/CameraInfo.h>
 #include <camera_info_manager/camera_info_manager.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <time.h>
+
+#include "boson_camera.h"
+
+//todo move these functions to a separate module
+
+void compute_hist_16U(const cv::Mat &img, long *hist) {
+    unsigned short i, j;
+    long *b;
+
+    assert(img.channels() == 1);
+    assert(CV_16U == img.type());
+
+    for (i = 0; i <= img.cols - 1; i++) {
+        for (j = 0; j <= img.rows - 1; j++) {
+            hist[img.at<unsigned short>(j, i)]++;
+        }
+    }
+    // cumulative histogram
+    for (b = hist; b < hist + 65535; b++) {
+        *(b + 1) += *b;
+    }
+}
+
+void equalizeHist_16u(cv::Mat &src, cv::Mat &dst) {
+    assert(src.channels() == 1);
+    assert(src.type() == CV_16U);
+    long hist[65536] = {0};
+
+    compute_hist_16U(src, hist);
+
+    for (int i = 0; i <= src.cols - 1; i++) {
+        for (int j = 0; j <= src.rows - 1; j++) {
+            dst.at<unsigned short>(j, i) = 65535.0 * hist[src.at<unsigned short>(j, i)] / (dst.cols * dst.rows);
+        }
+    }
+}
 
 timespec get_reset_time() {
     /* get monotonic clock time */
@@ -79,10 +114,12 @@ int main(int argc, char *argv[]) {
     int framecount = 0;
 
     ros::Rate loop_rate(frame_rate);
+
     while (ros::ok()) {
         cv::Mat img = camera.captureRawFrame();
-        cv::Mat img_norm;
+        cv::Mat img_norm, img_eq;
         img.copyTo(img_norm);
+        img.copyTo(img_eq);
 
         // Normalize for visualization
         cv::normalize(img, img_norm, 65536, 0, cv::NORM_MINMAX);
@@ -90,11 +127,11 @@ int main(int argc, char *argv[]) {
         framecount++;
 
         // Convert to image_msg & publish msg
-        sensor_msgs::ImagePtr msg[2];
+        sensor_msgs::ImagePtr msg[3];
         msg[0] = cv_bridge::CvImage(std_msgs::Header(), "mono16", img).toImageMsg();
         msg[1] = cv_bridge::CvImage(std_msgs::Header(), "mono8", img_norm).toImageMsg();
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             msg[i]->width = camera.width;
             msg[i]->height = camera.height;
             msg[i]->header.stamp.sec = camera.last_ts.tv_sec + epoch_time.tv_sec;
