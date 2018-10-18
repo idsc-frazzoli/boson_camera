@@ -24,4 +24,3 @@ target_link_libraries(${PROJECT_NAME}
 
 cs_install()
 cs_export()
-
