@@ -80,8 +80,6 @@ int main(int argc, char *argv[]) {
     ros::NodeHandle nh(camera_name);
     ros::NodeHandle nh_private("~");
 
-    printf("Video device set to: %s\n", argv[1]);
-
     // ros param handling
     std::string camera_info_url_;
     nh_private.param("camera_info_url", camera_info_url_, std::string(""));
@@ -99,7 +97,7 @@ int main(int argc, char *argv[]) {
     // Get time difference between REALTIME and MONOTIME
     struct timespec epoch_time = get_reset_time();
 
-    // Setup publisher
+    // Setup publisher & subscriber
     ros::Publisher camera_info_pub_;
     image_transport::ImageTransport it(nh);
     image_transport::Publisher boson_raw_pub = it.advertise("/boson/image_raw", 1);
@@ -117,9 +115,8 @@ int main(int argc, char *argv[]) {
 
     while (ros::ok()) {
         cv::Mat img = camera.captureRawFrame();
-        cv::Mat img_norm, img_eq;
+        cv::Mat img_norm;
         img.copyTo(img_norm);
-        img.copyTo(img_eq);
 
         // Normalize for visualization
         cv::normalize(img, img_norm, 65536, 0, cv::NORM_MINMAX);
@@ -127,7 +124,7 @@ int main(int argc, char *argv[]) {
         framecount++;
 
         // Convert to image_msg & publish msg
-        sensor_msgs::ImagePtr msg[3];
+        sensor_msgs::ImagePtr msg[2];
         msg[0] = cv_bridge::CvImage(std_msgs::Header(), "mono16", img).toImageMsg();
         msg[1] = cv_bridge::CvImage(std_msgs::Header(), "mono8", img_norm).toImageMsg();
 

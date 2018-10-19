@@ -5,6 +5,9 @@
 #ifndef BOSON_CAMERA_H
 #define BOSON_CAMERA_H
 
+#define HEIGHT 512
+#define WIDTH 640
+
 #include <string>
 #include <linux/videodev2.h>
 #include <opencv2/opencv.hpp>
