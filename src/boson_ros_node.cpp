@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
             camera_info_pub_.publish(cinfo_msg);
         } else {
             if (framecount % 100 == 0)
-                ROS_WARN("Boson is not calibrated!");
+                ROS_INFO_ONCE("Boson is not calibrated!");
         }
 
         ros::spinOnce();
@@ -110,7 +110,6 @@ int main(int argc, char *argv[]) {
     ros::spinOnce();
 
     boson_raw_pub.shutdown();
-    //boson_normalized_pub.shutdown();
     camera_info_pub_.shutdown();
 
     camera.stopStream();
