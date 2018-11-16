@@ -21,8 +21,8 @@ ros::Duration get_reset_time() {
     clock_gettime(CLOCK_MONOTONIC, &monotime);
 
     /* get realtime clock time for comparison */
-//    struct timespec realtime;
-//    clock_gettime(CLOCK_REALTIME, &realtime);
+    //    struct timespec realtime;
+    //    clock_gettime(CLOCK_REALTIME, &realtime);
 
     ros::Time now = ros::Time::now();
 	ros::Duration epoch_duration(0, 0);
@@ -41,7 +41,6 @@ ros::Duration get_reset_time() {
 }
 
 int main(int argc, char *argv[]) {
-    // TODO rewrite node in clean code format
     // Default frame rate of 10 Hz
     float frame_rate = 10.0;
     std::string camera_name = "boson";
@@ -75,7 +74,6 @@ int main(int argc, char *argv[]) {
 
     image_transport::ImageTransport it(nh);
     image_transport::Publisher boson_raw_pub = it.advertise("/boson/image_raw", 1);
-//    image_transport::Publisher boson_normalized_pub = it.advertise("/boson/image_normalized", 1);
 
     // Set publishing frequency
     if (nh.hasParam("frame_rate")) {
@@ -88,30 +86,20 @@ int main(int argc, char *argv[]) {
 
     while (ros::ok()) {
         cv::Mat img = camera.captureRawFrame();
-//        cv::Mat img_norm;
-//        img.copyTo(img_norm);
-
-        // Normalize for visualization
-//        cv::normalize(img, img_norm, 65536, 0, cv::NORM_MINMAX);
-//        img_norm.convertTo(img_norm, CV_8UC1, 0.00390625, 0);
         framecount++;
 
         // Convert to image_msg & publish msg
         sensor_msgs::ImagePtr msg;
         msg = cv_bridge::CvImage(std_msgs::Header(), "mono16", img).toImageMsg();
-//        msg[1] = cv_bridge::CvImage(std_msgs::Header(), "mono8", img_norm).toImageMsg();
-
-		// Build timestamp
-		ros::Time last_ts(0, 0);
-		last_ts.sec = camera.last_ts.tv_sec;
-		last_ts.nsec = camera.last_ts.tv_usec * 1e3;
-
+		    // Build timestamp
+		    ros::Time last_ts(0, 0);
+		    last_ts.sec = camera.last_ts.tv_sec;
+		    last_ts.nsec = camera.last_ts.tv_usec * 1e3;
         msg->width = camera.width;
         msg->height = camera.height;
         msg->header.stamp = last_ts + epoch_duration;
 
         boson_raw_pub.publish(msg);
-//        boson_normalized_pub.publish(msg[1]);
 
         // Publish Camera Info
         if (cinfo_->isCalibrated()) {
@@ -131,7 +119,6 @@ int main(int argc, char *argv[]) {
     ros::spinOnce();
 
     boson_raw_pub.shutdown();
-//    boson_normalized_pub.shutdown();
     camera_info_pub_.shutdown();
 
     camera.stopStream();
