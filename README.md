@@ -26,6 +26,11 @@ Update the launch file accordingly
 4. Run the code `roslaunch boson_camera boson640.launch`
 
 
+#### Examples
+![alt text][ex_1]
+![alt text][ex_2]
+[ex_1]: https://github.com/idsc-frazzoli/boson_camera/tree/master/resources/images/ex_1.png
+[ex_2]: https://github.com/idsc-frazzoli/boson_camera/tree/master/resources/images/ex_2.png
 
 -----------------------------
 Boson SDK Documentation
