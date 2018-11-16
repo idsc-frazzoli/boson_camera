@@ -29,8 +29,8 @@ Update the launch file accordingly
 #### Examples
 ![alt text][ex_1]
 ![alt text][ex_2]
-[ex_1]: https://github.com/idsc-frazzoli/boson_camera/tree/master/resources/images/ex_1.png
-[ex_2]: https://github.com/idsc-frazzoli/boson_camera/tree/master/resources/images/ex_2.png
+[ex_1]: https://github.com/idsc-frazzoli/boson_camera/tree/master/resources/images/ex_1.png "example 1"
+[ex_2]: https://github.com/idsc-frazzoli/boson_camera/tree/master/resources/images/ex_2.png "example 2"
 
 -----------------------------
 Boson SDK Documentation
