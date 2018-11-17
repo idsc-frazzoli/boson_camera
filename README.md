@@ -14,25 +14,20 @@ Getting started
    
    If not you can give access to the device by invoking `sudo chmod a+rwx /dev/ttyACM0` command
 3. Try to find the unique ID that your Boson 640 has by using these commands:
-```$xslt
-$ cd /dev/v4l/by-id
-$ ls
-```
-Your device ID should look somewhat like this:
-```$xslt
-/dev/v4l/by-id/usb-FLIR_Boson_XXXXX-video-index 
-```
-Update the launch file accordingly
+   ```$xslt
+   $ cd /dev/v4l/by-id
+   $ ls
+   ```
+   Your device ID should look somewhat like this:
+   ```$xslt
+   /dev/v4l/by-id/usb-FLIR_Boson_XXXXX-video-index 
+   ```
+   Update the launch file accordingly
 4. Run the code `roslaunch boson_camera boson640.launch`
-
 
 #### Examples
 
-![example 1][ex_1]
-![example 2][ex_2]
-
-[ex_1]: https://github.com/idsc-frazzoli/boson_camera/tree/master/resources/images/ex_1.png "example 1"
-[ex_2]: https://github.com/idsc-frazzoli/boson_camera/tree/master/resources/images/ex_2.png "example 2"
+<img src="resources/images/ex_1.png" width="300"> <img src="resources/images/ex_2.png" width="300">
 
 -----------------------------
 Boson SDK Documentation
