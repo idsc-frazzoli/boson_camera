@@ -1,10 +1,10 @@
 FLIR Boson ROS Wrapper
------------------------------
+=============================
 ROS Wrapper camera interface for the FLIR Boson 640 being used for the Zauron. This is an initial work-in-progress project.
+This repository provides minimal functionalities to stream and republish over ROS the infrared camera [FLIR Boson 640](https://www.flir.com/products/boson/).
 
------------------------------
 Getting started
------------------------------
+------------------
 0. Install requirements: [catkin_simple](https://github.com/catkin/catkin_simple) and [OpenCV](https://www.opencv.org/)
 1. Build the package with `catkin build boson_camera`
 2. Connect the FLIR Boson 640 camera.
