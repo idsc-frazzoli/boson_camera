@@ -1,4 +1,3 @@
------------------------------
 FLIR Boson ROS Wrapper
 -----------------------------
 ROS Wrapper camera interface for the FLIR Boson 640 being used for the Zauron. This is an initial work-in-progress project.
