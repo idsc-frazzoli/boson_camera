@@ -1,4 +1,4 @@
-FLIR Boson ROS Wrapper
+FLIR Boson ROS Wrapper [deprecated see zauron-interface]
 =============================
 ROS Wrapper camera interface for the FLIR Boson 640 being used for the Zauron. This is an initial work-in-progress project.
 This repository provides minimal functionalities to stream and republish over ROS the infrared camera [FLIR Boson 640](https://www.flir.com/products/boson/).
